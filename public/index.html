@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Genomic Variant Analysis Agent</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Clinical genomics workspace</p>
+        <h1>Variant Evidence Agent</h1>
+      </div>
+      <canvas id="systemVisual" width="360" height="88" aria-label="Protein and variant analysis visual"></canvas>
+    </header>
+
+    <main class="app-shell">
+      <aside class="query-panel" aria-label="Variant query">
+        <form id="analysisForm">
+          <div class="panel-title">
+            <h2>Patient Query</h2>
+            <span id="healthBadge" class="badge neutral">Local</span>
+          </div>
+
+          <label class="field">
+            <span>Gender <button class="help" type="button" title="Optional field for sex-influenced phenotypes and inheritance patterns." aria-label="Gender help">?</button></span>
+            <select name="gender">
+              <option value="">Not specified</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+              <option>Unknown</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Age <button class="help" type="button" title="Use a single year value or a range such as 18-35. Maximum 150." aria-label="Age help">?</button></span>
+            <input name="age" inputmode="numeric" placeholder="25 or 18-35">
+          </label>
+
+          <div class="field">
+            <span>Phenotypes <button class="help" type="button" title="Use HPO-style terms. Add multiple clinical features as separate chips." aria-label="Phenotypes help">?</button></span>
+            <div class="combo-line">
+              <input id="phenotypeInput" list="phenotypeOptions" placeholder="Developmental delay">
+              <button id="addPhenotype" class="icon-button" type="button" title="Add phenotype" aria-label="Add phenotype">+</button>
+            </div>
+            <datalist id="phenotypeOptions"></datalist>
+            <div id="phenotypeChips" class="chips" aria-live="polite"></div>
+          </div>
+
+          <label class="field">
+            <span>Gene Name <strong>*</strong> <button class="help" type="button" title="HGNC gene symbol or alias, such as BRCA1, TP53, DMD, or CFTR." aria-label="Gene help">?</button></span>
+            <input name="gene" id="geneInput" list="geneOptions" required placeholder="BRCA1" autocomplete="off">
+            <datalist id="geneOptions"></datalist>
+          </label>
+
+          <label class="field">
+            <span>cDNA Position <button class="help" type="button" title="HGVS c. notation, such as c.123A>G or c.123_124delAT." aria-label="cDNA help">?</button></span>
+            <input name="cdna" placeholder="c.68_69delAG">
+          </label>
+
+          <label class="field">
+            <span>Protein Position <button class="help" type="button" title="HGVS p. notation, such as p.R41Q or p.Arg41Gln." aria-label="Protein help">?</button></span>
+            <input name="protein" placeholder="p.Glu23Valfs">
+          </label>
+
+          <label class="field">
+            <span>Zygosity <button class="help" type="button" title="Optional inheritance context for literature matching." aria-label="Zygosity help">?</button></span>
+            <select name="zygosity">
+              <option value="">Not specified</option>
+              <option>Homozygous</option>
+              <option>Heterozygous</option>
+              <option>Hemizygous</option>
+              <option>Compound heterozygous</option>
+              <option>Unknown</option>
+            </select>
+          </label>
+
+          <fieldset class="field fieldset">
+            <legend>Inheritance Pattern <button class="help" type="button" title="Select one or more inheritance models to cross-check against paper and OMIM evidence." aria-label="Inheritance help">?</button></legend>
+            <div class="segmented-grid">
+              <label><input type="checkbox" name="inheritance" value="Autosomal Dominant"> AD</label>
+              <label><input type="checkbox" name="inheritance" value="Autosomal Recessive"> AR</label>
+              <label><input type="checkbox" name="inheritance" value="X-linked Dominant"> XD</label>
+              <label><input type="checkbox" name="inheritance" value="X-linked Recessive"> XR</label>
+              <label><input type="checkbox" name="inheritance" value="Mitochondrial"> MT</label>
+              <label><input type="checkbox" name="inheritance" value="De novo"> De novo</label>
+            </div>
+          </fieldset>
+
+          <label class="consent-row">
+            <input id="recentConsent" type="checkbox">
+            <span>Store recent searches on this device</span>
+          </label>
+
+          <button id="submitButton" class="primary-action" type="submit">
+            <span class="button-icon" aria-hidden="true">></span>
+            Analyze Variant
+          </button>
+
+          <div id="formErrors" class="error-box" role="alert" hidden></div>
+        </form>
+
+        <section class="recent-block" aria-label="Recent searches">
+          <div class="section-heading">
+            <h3>Recent</h3>
+            <button id="clearRecent" class="ghost-button" type="button">Clear</button>
+          </div>
+          <div id="recentSearches" class="recent-list"></div>
+        </section>
+      </aside>
+
+      <section class="results-panel" aria-live="polite">
+        <div id="loadingState" class="loading-state" hidden>
+          <div class="loader-row">
+            <span class="loader"></span>
+            <strong id="loadingLabel">Validating query</strong>
+          </div>
+          <div class="progress-track"><span id="progressBar"></span></div>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+          <h2>Ready for analysis</h2>
+          <p>Enter a gene and any variant or phenotype context to assemble source status, ClinVar evidence, protein/domain context, OMIM configuration state, and ranked literature.</p>
+        </div>
+
+        <div id="resultView" hidden>
+          <div class="result-head">
+            <div>
+              <p class="eyebrow">Generated <span id="generatedAt"></span></p>
+              <h2 id="resultTitle">Variant Analysis</h2>
+            </div>
+            <div id="sourceStatusStrip" class="status-strip"></div>
+          </div>
+
+          <nav class="tabs" aria-label="Analysis result tabs">
+            <button class="tab active" type="button" data-tab="gene">Gene Info</button>
+            <button class="tab" type="button" data-tab="variant">Variant</button>
+            <button class="tab" type="button" data-tab="protein">Exon & Domain</button>
+            <button class="tab" type="button" data-tab="phenotypes">OMIM & Phenotypes</button>
+            <button class="tab" type="button" data-tab="papers">Papers</button>
+            <button class="tab" type="button" data-tab="exports">Export</button>
+          </nav>
+
+          <div id="tabContent" class="tab-content"></div>
+        </div>
+      </section>
+    </main>
+
+    <template id="paperTemplate">
+      <article class="paper-card"></article>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "genomic-variant-agent",
+  "version": "0.1.0",
+  "description": "Local genomic variant analysis agent with clinical query UI, public API adapters, local literature search, and report exports.",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check server/analysisService.js && node --check server/dataSources.js && node --check server/exports.js && node --check server/knowledgeBase.js && node --check server/localPapers.js && node --check server/matcher.js && node --check server/utils.js && node --check server/validators.js && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

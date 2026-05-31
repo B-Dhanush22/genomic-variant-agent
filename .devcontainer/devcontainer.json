@@ -1,0 +1,21 @@
+{
+  "name": "Genomic Variant Agent",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-24-bookworm",
+  "forwardPorts": [4173],
+  "portsAttributes": {
+    "4173": {
+      "label": "Variant Evidence Agent",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "postCreateCommand": "npm run check",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint"],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "HP:0001263",
+    "label": "Global developmental delay",
+    "synonyms": ["Developmental delay", "Delayed development"]
+  },
+  {
+    "id": "HP:0001252",
+    "label": "Hypotonia",
+    "synonyms": ["Low muscle tone"]
+  },
+  {
+    "id": "HP:0001250",
+    "label": "Seizure",
+    "synonyms": ["Seizures", "Epileptic seizure"]
+  },
+  {
+    "id": "HP:0001644",
+    "label": "Dilated cardiomyopathy",
+    "synonyms": ["Cardiomyopathy", "Cardiac dilation"]
+  },
+  {
+    "id": "HP:0001635",
+    "label": "Congestive heart failure",
+    "synonyms": ["Heart failure", "Cardiac failure"]
+  },
+  {
+    "id": "HP:0000707",
+    "label": "Abnormality of the nervous system",
+    "synonyms": ["Neurologic abnormality", "Neurological features"]
+  },
+  {
+    "id": "HP:0002664",
+    "label": "Neoplasm",
+    "synonyms": ["Cancer", "Tumor", "Malignancy"]
+  },
+  {
+    "id": "HP:0003002",
+    "label": "Breast carcinoma",
+    "synonyms": ["Breast cancer", "Carcinoma of breast"]
+  },
+  {
+    "id": "HP:0100615",
+    "label": "Ovarian neoplasm",
+    "synonyms": ["Ovarian cancer", "Ovarian carcinoma"]
+  },
+  {
+    "id": "HP:0001738",
+    "label": "Exocrine pancreatic insufficiency",
+    "synonyms": ["Pancreatic insufficiency"]
+  },
+  {
+    "id": "HP:0002205",
+    "label": "Recurrent respiratory infections",
+    "synonyms": ["Frequent respiratory infections"]
+  },
+  {
+    "id": "HP:0002024",
+    "label": "Malabsorption",
+    "synonyms": ["Impaired absorption"]
+  },
+  {
+    "id": "HP:0001638",
+    "label": "Cardiomyopathy",
+    "synonyms": ["Heart muscle disease"]
+  },
+  {
+    "id": "HP:0001290",
+    "label": "Generalized hypotonia",
+    "synonyms": ["Diffuse hypotonia"]
+  },
+  {
+    "id": "HP:0001249",
+    "label": "Intellectual disability",
+    "synonyms": ["Cognitive impairment", "Learning disability"]
+  },
+  {
+    "id": "HP:0002120",
+    "label": "Cerebral cortical atrophy",
+    "synonyms": ["Cortical atrophy"]
+  },
+  {
+    "id": "HP:0003202",
+    "label": "Skeletal muscle atrophy",
+    "synonyms": ["Muscle wasting"]
+  },
+  {
+    "id": "HP:0003560",
+    "label": "Muscular dystrophy",
+    "synonyms": ["Dystrophic muscle disease"]
+  },
+  {
+    "id": "HP:0004322",
+    "label": "Short stature",
+    "synonyms": ["Reduced height"]
+  },
+  {
+    "id": "HP:0001510",
+    "label": "Growth delay",
+    "synonyms": ["Delayed growth"]
+  }
+]

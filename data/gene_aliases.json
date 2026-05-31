@@ -1,0 +1,77 @@
+[
+  {
+    "symbol": "BRCA1",
+    "name": "BRCA1 DNA repair associated",
+    "aliases": ["BRCC1", "FANCS", "IRIS", "PNCA4", "PPP1R53", "RNF53"]
+  },
+  {
+    "symbol": "BRCA2",
+    "name": "BRCA2 DNA repair associated",
+    "aliases": ["FAD", "FAD1", "FACD", "FANCD1", "XRCC11"]
+  },
+  {
+    "symbol": "TP53",
+    "name": "tumor protein p53",
+    "aliases": ["BCC7", "LFS1", "P53", "TRP53"]
+  },
+  {
+    "symbol": "DMD",
+    "name": "dystrophin",
+    "aliases": ["BMD", "CMD3B", "DXS142", "DXS164", "DXS206", "DXS230"]
+  },
+  {
+    "symbol": "CFTR",
+    "name": "CF transmembrane conductance regulator",
+    "aliases": ["ABCC7", "CF", "MRP7", "TNR-CFTR"]
+  },
+  {
+    "symbol": "MECP2",
+    "name": "methyl-CpG binding protein 2",
+    "aliases": ["AUTSX3", "MRX16", "MRX79", "MRXS13", "RTT"]
+  },
+  {
+    "symbol": "SCN1A",
+    "name": "sodium voltage-gated channel alpha subunit 1",
+    "aliases": ["BFIS5", "EIEE6", "FEB3", "GEFSP2", "HBSCI", "NAC1", "Nav1.1"]
+  },
+  {
+    "symbol": "TTN",
+    "name": "titin",
+    "aliases": ["CMD1G", "CMH9", "EOMFC", "HMERF", "LGMD2J", "TMD"]
+  },
+  {
+    "symbol": "LDLR",
+    "name": "low density lipoprotein receptor",
+    "aliases": ["FH", "FHC", "LDLCQ2"]
+  },
+  {
+    "symbol": "PAH",
+    "name": "phenylalanine hydroxylase",
+    "aliases": ["PKU", "PH"]
+  },
+  {
+    "symbol": "GBA1",
+    "name": "glucosylceramidase beta 1",
+    "aliases": ["GBA", "GC", "GLUC"]
+  },
+  {
+    "symbol": "APC",
+    "name": "APC regulator of WNT signaling pathway",
+    "aliases": ["DP2", "DP2.5", "PPP1R46"]
+  },
+  {
+    "symbol": "FGFR3",
+    "name": "fibroblast growth factor receptor 3",
+    "aliases": ["ACH", "CEK2", "JTK4"]
+  },
+  {
+    "symbol": "FBN1",
+    "name": "fibrillin 1",
+    "aliases": ["ACMICD", "ECTOL1", "MASS", "MFS1", "SGS"]
+  },
+  {
+    "symbol": "HBB",
+    "name": "hemoglobin subunit beta",
+    "aliases": ["CD113t-C", "HBD", "beta-globin"]
+  }
+]
