@@ -28,7 +28,7 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (request.method === "GET" && url.pathname === "/api/suggest/genes") {
-      return sendJson(response, 200, { suggestions: suggestGenes(url.searchParams.get("q") || "") });
+      return sendJson(response, 200, { suggestions: await suggestGenes(url.searchParams.get("q") || "") });
     }
 
     if (request.method === "GET" && url.pathname === "/api/suggest/hpo") {

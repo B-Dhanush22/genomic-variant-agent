@@ -1,9 +1,10 @@
 const path = require("node:path");
-const { dataDir } = require("./config");
+const { dataDir, requestTimeoutMs } = require("./config");
 const { normalizeKey, normalizeText, readJsonFile, unique } = require("./utils");
 
 const geneRows = readJsonFile(path.join(dataDir, "gene_aliases.json"), []);
 const hpoRows = readJsonFile(path.join(dataDir, "hpo_terms.json"), []);
+const remoteGeneCache = new Map();
 
 const aliasToGene = new Map();
 const symbolToRow = new Map();
@@ -44,11 +45,24 @@ function normalizeGene(input) {
     official: false,
     aliases: [],
     name: "",
-    suggestions: suggestGenes(raw, 6)
+    suggestions: suggestGenesLocal(raw, 6)
   };
 }
 
-function suggestGenes(query, limit = 10) {
+async function suggestGenes(query, limit = 10) {
+  const local = suggestGenesLocal(query, limit);
+  const q = normalizeKey(query);
+  if (q.length < 2) return local;
+
+  try {
+    const remote = await suggestGenesFromHgnc(q, limit);
+    return mergeGeneSuggestions([...remote, ...local]).slice(0, limit);
+  } catch {
+    return local;
+  }
+}
+
+function suggestGenesLocal(query, limit = 10) {
   const q = normalizeKey(query);
   if (!q) return geneRows.slice(0, limit).map(formatGeneSuggestion);
 
@@ -68,6 +82,51 @@ function suggestGenes(query, limit = 10) {
     .sort((a, b) => b.score - a.score || a.row.symbol.localeCompare(b.row.symbol))
     .slice(0, limit)
     .map(({ row }) => formatGeneSuggestion(row));
+}
+
+async function suggestGenesFromHgnc(query, limit) {
+  const cacheKey = `${query}:${limit}`;
+  const hit = remoteGeneCache.get(cacheKey);
+  if (hit && Date.now() - hit.createdAt < 12 * 60 * 60 * 1000) return hit.value;
+
+  const results = [];
+  const queries = [
+    `symbol:${query}*+AND+status:Approved`,
+    `alias_symbol:${query}*+AND+status:Approved`,
+    `prev_symbol:${query}*+AND+status:Approved`
+  ];
+
+  for (const search of queries) {
+    const response = await fetchHgncJson(`https://rest.genenames.org/search/${encodeURIComponent(search)}`);
+    const docs = response?.response?.docs || [];
+    for (const doc of docs) {
+      results.push(formatHgncSuggestion(doc));
+      if (mergeGeneSuggestions(results).length >= limit) break;
+    }
+    if (mergeGeneSuggestions(results).length >= limit) break;
+  }
+
+  const value = mergeGeneSuggestions(results);
+  remoteGeneCache.set(cacheKey, { createdAt: Date.now(), value });
+  return value;
+}
+
+async function fetchHgncJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), Math.min(requestTimeoutMs, 5000));
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "genomic-variant-agent/0.1"
+      },
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`HGNC returned ${response.status}`);
+    return response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function suggestPhenotypes(query, limit = 12) {
@@ -112,6 +171,26 @@ function formatGeneSuggestion(row) {
     name: row.name || "",
     aliases: row.aliases || []
   };
+}
+
+function formatHgncSuggestion(doc) {
+  return {
+    symbol: doc.symbol || "",
+    name: doc.name || "",
+    aliases: unique([...(doc.alias_symbol || []), ...(doc.prev_symbol || [])])
+  };
+}
+
+function mergeGeneSuggestions(values) {
+  const seen = new Set();
+  const out = [];
+  for (const value of values) {
+    const symbol = normalizeKey(value.symbol);
+    if (!symbol || seen.has(symbol)) continue;
+    seen.add(symbol);
+    out.push({ ...value, symbol });
+  }
+  return out;
 }
 
 module.exports = {
